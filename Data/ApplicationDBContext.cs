@@ -7,13 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace dotnet_first.Data
 {
-    public class ApplicationDBContext : DbContext
+    public class ApplicationDBContext(DbContextOptions dbContextOptions) : DbContext(dbContextOptions)
     {
-        ApplicationDBContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
-        {
-
-        }
-
         public DbSet<Stock> Stock { get; set; }
         public DbSet<Stock> Comment { get; set; }
     }
