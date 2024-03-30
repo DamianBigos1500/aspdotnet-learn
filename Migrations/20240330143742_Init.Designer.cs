@@ -12,8 +12,8 @@ using dotnet_first.Data;
 namespace dotnet_first.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240330103220_init")]
-    partial class init
+    [Migration("20240330143742_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
