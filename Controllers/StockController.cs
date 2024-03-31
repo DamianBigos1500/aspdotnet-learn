@@ -1,17 +1,14 @@
-using dotnet_first.Data;
 using dotnet_first.Dtos.Stock;
 using dotnet_first.Interfaces;
 using dotnet_first.Mappers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace dotnet_first.Controllers
 {
     [Route("api/stocks")]
-    public class StockController(ApplicationDBContext context, IStockRepository stockRepo) : ControllerBase
+    public class StockController(IStockRepository stockRepo) : ControllerBase
     {
         private readonly IStockRepository _stockRepo = stockRepo;
-        private readonly ApplicationDBContext _context = context;
 
         [HttpGet]
         public async Task<IActionResult> GetAll()

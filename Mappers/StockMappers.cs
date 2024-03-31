@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using dotnet_first.Dtos.Stock;
 using dotnet_first.Models;
 
@@ -20,6 +16,7 @@ namespace dotnet_first.Mappers
                 LastDiv = stockModel.LastDiv,
                 Industry = stockModel.Industry,
                 MarketCap = stockModel.MarketCap,
+                Comments = stockModel.Comments.Select(c => c.ToCommentDto()).ToList()
             };
         }
 

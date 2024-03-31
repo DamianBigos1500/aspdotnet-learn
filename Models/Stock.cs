@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace dotnet_first.Models
 {
@@ -24,6 +20,6 @@ namespace dotnet_first.Models
         
         public long MarketCap { get; set; }
 
-        public List<Comment> Comments { get; set; } = new List<Comment>();
+        public List<Comment> Comments { get; set; } = [];
     }
 }
