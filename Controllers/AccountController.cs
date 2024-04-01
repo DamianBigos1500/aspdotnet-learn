@@ -1,44 +1,80 @@
-using dotnet_first.Dtos.Comment;
+using dotnet_first.Dtos.Account;
 using dotnet_first.Interfaces;
-using dotnet_first.Mappers;
+using dotnet_first.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace dotnet_first.Controllers
 {
-    [Route("api/comments")]
-    public class AccountController(ICommentRepository commentRepo, IStockRepository stockRepo) : ControllerBase
+    [Route("api/accounts")]
+    public class AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager) : ControllerBase
     {
-        private readonly ICommentRepository _commentRepo = commentRepo;
-        private readonly IStockRepository _stockRepo = stockRepo;
+        private readonly UserManager<AppUser> _userManager = userManager;
+        private readonly SignInManager<AppUser> _signInManager = signInManager;
+        private readonly ITokenService _tokenService = tokenService;
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            var comments = await _commentRepo.GetAllAsync();
-            var commentDto = comments.Select(s => s.ToCommentDto());
+            if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.Username);
 
-            return Ok(comments);
+            if (user == null) return Unauthorized("Invaid Username!");
+            var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+
+            if (!result.Succeeded) Unauthorized("Useranme not found or Password not correct!");
+            return Ok(new NewUserDto
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                Token = _tokenService.CreateToken(user)
+            });
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
-            var comment = await _commentRepo.GetByIdAsync(id);
-            if (comment == null) return NotFound();
+            try
+            {
+                if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
 
-            return Ok(comment.ToCommentDto());
-        }
+                var appUser = new AppUser
+                {
+                    UserName = registerDto.Username,
+                    Email = registerDto.Email,
+                };
 
 
-        [HttpPost("{stockId}")]
-        public async Task<IActionResult> Create([FromRoute] int stockId, [FromBody] CreateCommentDto commentDto)
-        {
-            if (!await _stockRepo.StockExists(stockId)) return BadRequest("Stock does not exists!");
+                var createdUser = await _userManager.CreateAsync(appUser, registerDto.Password);
 
-            var commentModel = commentDto.ToCommentFromCreate(stockId);
-            await _commentRepo.CreateAsync(commentModel);
+                if (createdUser.Succeeded)
+                {
+                    var roleResult = await _userManager.AddToRoleAsync(appUser, "User");
 
-            return CreatedAtAction(nameof(GetById), new { id = commentModel.Id }, commentModel.ToCommentDto());
+                    if (roleResult.Succeeded)
+                    {
+                        return Ok(new NewUserDto
+                        {
+                            UserName = appUser.UserName,
+                            Email = appUser.Email,
+                            Token = _tokenService.CreateToken(appUser)
+                        });
+                    }
+                    else
+                    {
+                        return StatusCode(500, roleResult.Errors);
+                    }
+                }
+                else
+                {
+                    return StatusCode(500, createdUser.Errors);
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e);
+            }
         }
     }
 }

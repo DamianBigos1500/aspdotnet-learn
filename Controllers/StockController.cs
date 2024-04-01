@@ -1,6 +1,7 @@
 using dotnet_first.Dtos.Stock;
 using dotnet_first.Interfaces;
 using dotnet_first.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dotnet_first.Controllers
@@ -10,6 +11,7 @@ namespace dotnet_first.Controllers
     {
         private readonly IStockRepository _stockRepo = stockRepo;
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
