@@ -1,4 +1,6 @@
-<main class="main">
+<main class="flex items-center gap-4 border-b-2 px-4 py-2">
+  <a routerLink="/" class="btn btn-ghost btn-sm rounded-btn">Home</a>
+  <a routerLink="/login" class="btn btn-ghost btn-sm rounded-btn">Login</a>
   <button class="btn" onclick="my_modal_1.showModal()">open modal</button>
   <dialog id="my_modal_1" class="modal">
     <div class="modal-box">
@@ -13,14 +15,5 @@
     </div>
   </dialog>
 </main>
-
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-
 
 <router-outlet />
