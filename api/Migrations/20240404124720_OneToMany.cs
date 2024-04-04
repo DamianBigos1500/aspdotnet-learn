@@ -3,49 +3,16 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace dotnet_first.Migrations
 {
     /// <inheritdoc />
-    public partial class Identity : Migration
+    public partial class OneToMany : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Comment_Stock_StockId",
-                table: "Comment");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Stock",
-                table: "Stock");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Comment",
-                table: "Comment");
-
-            migrationBuilder.RenameTable(
-                name: "Stock",
-                newName: "Stocks");
-
-            migrationBuilder.RenameTable(
-                name: "Comment",
-                newName: "Comments");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Comment_StockId",
-                table: "Comments",
-                newName: "IX_Comments_StockId");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Stocks",
-                table: "Stocks",
-                column: "Id");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Comments",
-                table: "Comments",
-                column: "Id");
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -83,6 +50,24 @@ namespace dotnet_first.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Stocks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Symbol = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Purchase = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    LastDiv = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Industry = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MarketCap = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Stocks", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -191,6 +176,60 @@ namespace dotnet_first.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Courses",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    IsPublished = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Courses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Courses_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StockId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_Stocks_StockId",
+                        column: x => x.StockId,
+                        principalTable: "Stocks",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "20773486-ea97-4b5d-8bd1-724d571eadda", null, "Admin", "ADMIN" },
+                    { "89cb9e83-eed6-4a25-b4dc-aa64b2513f58", null, "User", "USER" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -230,21 +269,20 @@ namespace dotnet_first.Migrations
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Comments_Stocks_StockId",
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_StockId",
                 table: "Comments",
-                column: "StockId",
-                principalTable: "Stocks",
-                principalColumn: "Id");
+                column: "StockId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_AppUserId",
+                table: "Courses",
+                column: "AppUserId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Comments_Stocks_StockId",
-                table: "Comments");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -261,48 +299,19 @@ namespace dotnet_first.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "Courses");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Stocks");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Stocks",
-                table: "Stocks");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Comments",
-                table: "Comments");
-
-            migrationBuilder.RenameTable(
-                name: "Stocks",
-                newName: "Stock");
-
-            migrationBuilder.RenameTable(
-                name: "Comments",
-                newName: "Comment");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Comments_StockId",
-                table: "Comment",
-                newName: "IX_Comment_StockId");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Stock",
-                table: "Stock",
-                column: "Id");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Comment",
-                table: "Comment",
-                column: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Comment_Stock_StockId",
-                table: "Comment",
-                column: "StockId",
-                principalTable: "Stock",
-                principalColumn: "Id");
         }
     }
 }

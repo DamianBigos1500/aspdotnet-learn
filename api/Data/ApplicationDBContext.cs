@@ -9,10 +9,18 @@ namespace dotnet_first.Data
     {
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Course> Courses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            // builder.Entity<Course>(x => x.HasKey(p => new { p.AppUserId }));
+
+            // builder.Entity<Course>()
+            //     .HasOne(u => u.AppUser)
+            //     .WithMany(u => u.Courses)
+            //     .HasForeignKey(u => u.AppUserId);
 
             List<IdentityRole> roles =
             [

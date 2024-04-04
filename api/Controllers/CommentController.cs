@@ -16,7 +16,7 @@ namespace dotnet_first.Controllers
         {
             var comments = await _commentRepo.GetAllAsync();
             var commentDto = comments.Select(s => s.ToCommentDto());
-
+    
             return Ok(comments);
         }
 

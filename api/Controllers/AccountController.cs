@@ -1,9 +1,11 @@
+using System.Security.Claims;
 using dotnet_first.Dtos.Account;
 using dotnet_first.Interfaces;
 using dotnet_first.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace dotnet_first.Controllers
 {
@@ -23,7 +25,7 @@ namespace dotnet_first.Controllers
             if (user == null) return Unauthorized("Invaid Username!");
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
-            if (!result.Succeeded) Unauthorized("Useranme not found or Password not correct!");
+            if (!result.Succeeded) return Unauthorized("Useranme not found or Password not correct!");
             return Ok(new NewUserDto
             {
                 UserName = user.UserName,
@@ -76,5 +78,19 @@ namespace dotnet_first.Controllers
                 return StatusCode(500, e);
             }
         }
+
+        // [HttpGet("details")]
+        // public async Task<IActionResult> Details()
+        // {
+        //     var user = async _userManager.FindByIdAsync('');
+          
+        //     return Ok(new NewUserDto
+        //     {
+        //         UserName = user.UserName,
+        //         Email = user.Email,
+        //         Token = _tokenService.CreateToken(user)
+        //     });
+        // }
     }
+
 }

@@ -51,13 +51,13 @@ namespace dotnet_first.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "da0eefad-b29b-43bc-84dc-0269e3fe3fa7",
+                            Id = "20773486-ea97-4b5d-8bd1-724d571eadda",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "43476376-a30b-459c-898b-4e410a36e98b",
+                            Id = "89cb9e83-eed6-4a25-b4dc-aa64b2513f58",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -263,6 +263,46 @@ namespace dotnet_first.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("dotnet_first.Models.Course", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Courses");
+                });
+
             modelBuilder.Entity("dotnet_first.Models.Stock", b =>
                 {
                     b.Property<int>("Id")
@@ -355,6 +395,20 @@ namespace dotnet_first.Migrations
                         .HasForeignKey("StockId");
 
                     b.Navigation("Stock");
+                });
+
+            modelBuilder.Entity("dotnet_first.Models.Course", b =>
+                {
+                    b.HasOne("dotnet_first.Models.AppUser", "AppUser")
+                        .WithMany("Courses")
+                        .HasForeignKey("AppUserId");
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("dotnet_first.Models.AppUser", b =>
+                {
+                    b.Navigation("Courses");
                 });
 
             modelBuilder.Entity("dotnet_first.Models.Stock", b =>

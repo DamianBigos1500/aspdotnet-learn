@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using dotnet_first.Data;
 using dotnet_first.Dtos.Comment;
 using dotnet_first.Interfaces;
