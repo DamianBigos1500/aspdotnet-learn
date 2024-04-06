@@ -28,9 +28,6 @@ export class AuthService {
         })
       );
   }
-  getComments(): Observable<any> {
-    return this.http.get<AuthResponse>(`${this.apiUrl}comments`);
-  }
 
   getUserDetail = () => {
     const token = this.getToken();

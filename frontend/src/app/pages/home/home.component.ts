@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ICourse } from '@app/features/courses/interfaces/ICourse';
+import { CourseService } from '@app/features/courses/service/course.service';
 
 @Component({
   selector: 'app-home',
@@ -9,13 +11,13 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent {
-  public comments: any;
+  public courses: ICourse[] = [];
 
-  constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(private courseService: CourseService) {}
 
   ngOnInit() {
-    this.activatedRoute.data.subscribe(({ comments }) => {
-      this.comments = comments;
+    this.courseService.getCourse().subscribe((courses) => {
+      this.courses = courses;
     });
   }
 }

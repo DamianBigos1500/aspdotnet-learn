@@ -10,7 +10,7 @@ export const routes: Routes = [
     path: '',
     component: HomeComponent,
     resolve: {
-        comments: CommentResolver,
+      courses: CommentResolver,
     },
   },
 ];
