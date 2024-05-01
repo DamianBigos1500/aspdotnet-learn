@@ -12,6 +12,9 @@ export class CourseService {
   constructor(private http: HttpClient) {}
 
   getCourse(): Observable<ICourse[]> {
-    return this.http.get<ICourse[]>(`${this.apiUrl}course`).pipe(delay(1000))
+    return this.http.get<ICourse[]>(`${this.apiUrl}course`);
+  }
+  getCourseById(id: string): Observable<ICourse[]> {
+    return this.http.get<ICourse[]>(`${this.apiUrl}course/${id}`);
   }
 }

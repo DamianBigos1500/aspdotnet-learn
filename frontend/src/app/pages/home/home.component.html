@@ -1,14 +1,24 @@
 <div>
   <div>Comments</div>
   <div class="flex gap-8 flex-wrap">
-    @for (course of courses; track course.id) {
+    @if(courses.length == 0) { @for (item of [1,2,3,4,5,6,7,8,9]; track $index)
+    {
+    <div class="flex flex-col gap-4 w-80 cursor-pointer">
+      <div class="skeleton h-32 w-full"></div>
+      <div class="skeleton h-4 w-28"></div>
+      <div class="skeleton h-4 w-full"></div>
+      <div class="skeleton h-4 w-full"></div>
+    </div>
+    } } @else {@for (course of courses; track course.id) {
     <div class="card w-80 glass hover:bg-slate-200 duration-200 cursor-pointer">
-      <figure>
-        <img
-          src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-          alt="car!"
-        />
-      </figure>
+      <a routerLink="/courses/{{ course.id }}">
+        <figure>
+          <img
+            src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
+            alt="car!"
+          />
+        </figure>
+      </a>
       <div class="card-body p-2">
         <h2 class="card-title">Life hack</h2>
         <p>How to park your car at your garage?</p>
@@ -17,13 +27,8 @@
         </div>
       </div>
     </div>
-    } @empty { @for (item of [1,2,3,4,5,6,7,8,9]; track $index) {
-    <div class="flex flex-col gap-4 w-80 cursor-pointer">
-      <div class="skeleton h-32 w-full"></div>
-      <div class="skeleton h-4 w-28"></div>
-      <div class="skeleton h-4 w-full"></div>
-      <div class="skeleton h-4 w-full"></div>
-    </div>
-    } }
+    } } @if(!isLoading && courses.length === 0) {
+    <div>No course found</div>
+    }
   </div>
 </div>

@@ -1,0 +1,2 @@
+[*.{cs,vb}]
+dotnet_naming_rule.private_members_with_underscore.symbols = private_field

@@ -100,6 +100,7 @@ builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<ICourseCategoryRepository, CourseCategoryRepository>();
 
 var app = builder.Build();
 
@@ -110,7 +111,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseCors(x => x
      .AllowAnyMethod()

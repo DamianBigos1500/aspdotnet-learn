@@ -22,7 +22,7 @@ namespace dotnet_first.Controllers
             var courses = await _courseRepo.GetAllAsync();
             var coursesDto = courses.Select(s => s.ToCourseDto());
 
-            return Ok(courses);
+            return Ok(coursesDto);
         }
 
         [HttpGet("{id}")]

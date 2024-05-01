@@ -1,0 +1,5 @@
+./bin
+.dotnet-first.csproj
+Dockerfile
+.dockerignore
+docker-compose.yaml

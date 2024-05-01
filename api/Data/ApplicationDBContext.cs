@@ -10,6 +10,7 @@ namespace dotnet_first.Data
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Course> Courses { get; set; }
+        public DbSet<CourseCategory> CourseCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

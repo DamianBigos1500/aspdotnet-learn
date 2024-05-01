@@ -51,13 +51,13 @@ namespace dotnet_first.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "20773486-ea97-4b5d-8bd1-724d571eadda",
+                            Id = "f205bce5-981b-427d-8d41-c2a1f2bd1d0d",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "89cb9e83-eed6-4a25-b4dc-aa64b2513f58",
+                            Id = "cfd6632b-c883-4480-a064-3f34d8a4280a",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -272,6 +272,9 @@ namespace dotnet_first.Migrations
                     b.Property<string>("AppUserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<Guid?>("CourseCategoryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
@@ -300,7 +303,24 @@ namespace dotnet_first.Migrations
 
                     b.HasIndex("AppUserId");
 
+                    b.HasIndex("CourseCategoryId");
+
                     b.ToTable("Courses");
+                });
+
+            modelBuilder.Entity("dotnet_first.Models.CourseCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CourseCategories");
                 });
 
             modelBuilder.Entity("dotnet_first.Models.Stock", b =>
@@ -403,10 +423,19 @@ namespace dotnet_first.Migrations
                         .WithMany("Courses")
                         .HasForeignKey("AppUserId");
 
+                    b.HasOne("dotnet_first.Models.CourseCategory", null)
+                        .WithMany("Courses")
+                        .HasForeignKey("CourseCategoryId");
+
                     b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("dotnet_first.Models.AppUser", b =>
+                {
+                    b.Navigation("Courses");
+                });
+
+            modelBuilder.Entity("dotnet_first.Models.CourseCategory", b =>
                 {
                     b.Navigation("Courses");
                 });
